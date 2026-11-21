@@ -1,0 +1,66 @@
+# Build outputs
+build/
+build-cmake/
+cmake-build-*/
+Debug/
+Release/
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+!assets/c4.pcm.bin
+!assets/ds_room_dance.bin
+!assets/ds_room_lion.bin
+*.map
+*.su
+*.d
+*.pdb
+*.ilk
+*.exp
+*.exe
+*.axf
+*.lst
+
+# Test captures and logs
+*.ppm
+*.log
+
+# IDE / local workspace
+.vscode/
+.vs/
+.idea/
+.clangd/
+*.uvguix.*
+*.uvoptx
+*.code-workspace
+*.swp
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+*.rej
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Local secrets
+.env
+.env.*
+
+# Docs, archives and non-shipping material
+docs/*
+!docs/ds-room.png
+*.pdf
+*.pptx
+*.docx
+*.xlsx
+*.zip
+*.7z
+*.rar
+*.diff
+
+# Python cache
+__pycache__/
+*.pyc

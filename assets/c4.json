@@ -1,0 +1,11 @@
+{
+  "source": "C4音效纯享（英文版）.MP3",
+  "source_sha256": "d36fe63b97319892b83d08845275a1c987e5263e04e9aa7728b885adddafc6b6",
+  "asset_sha256": "d5a1cb2c50abf6580243a35dc16eb68299b38b81330caf22f51052664c288cf3",
+  "format": "unsigned PCM8, mono, 16000 Hz",
+  "address": "0x100000",
+  "samples": 764448,
+  "duration_ms": 47778,
+  "normalization_gain": 1.5167176408003074,
+  "fnv1a": "aaa43eef"
+}
