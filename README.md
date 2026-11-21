@@ -9,6 +9,55 @@ SmartTone 是一款基于 STM32F103 和 128×160 ST7735 彩屏的七键电子琴
 
 ![DS 音乐小屋醒狮舞（主机模拟）](docs/ds-room.png)
 
+## 硬件接线
+
+表中的 PA、PB 是 STM32 板上标注的 GPIO。所有模块共地，ST7735 和 W25Q64 使用 3.3 V 电源及逻辑电平。
+
+### 琴键和 EC11
+
+| 部件 / 信号 | STM32 引脚 |
+| --- | --- |
+| Do / Re / Mi / Fa | PA1 / PA2 / PA3 / PA4 |
+| Sol / La / Si | PA11 / PA10 / PA9 |
+| FUNC | PA8 |
+| EC11 A / B（CLK / DT） | PB6 / PB7 |
+| EC11 按压开关（SW） | PB13 |
+
+琴键和 FUNC 的另一端接 GND。EC11 的 A/B 公共端和按压开关的另一端也接 GND。这些输入使用内部上拉，按下为低电平。带 VCC 的 EC11 模块使用 3.3 V。
+
+### ST7735 屏幕和 W25Q64
+
+| 信号 | ST7735 | W25Q64 | STM32 引脚 / 电源 |
+| --- | --- | --- | --- |
+| 供电 | VCC | VCC | 3.3 V |
+| 地 | GND | GND | GND |
+| SPI1 时钟 | SCK / SCL | CLK / SCK | PA5 |
+| SPI1 主控输出 | MOSI / SDA / DIN | DI / MOSI | PA7 |
+| SPI1 主控输入 | 此工程无需连接 | DO / MISO | PA6 |
+| 独立片选 | CS | — | PB5 |
+| 独立片选 | — | CS / CS# | PB0 |
+| 数据 / 命令 | DC / A0 | — | PB10 |
+| 屏幕复位 | RES / RST | — | PB11 |
+| 背光调光 | BL / BLK 控制端 | — | PB12 |
+
+屏幕和 Flash 共用 SPI1，片选分别接线。裸 W25Q64 若引出 `WP#` 和 `HOLD#`，两脚上拉到 3.3 V。PB12 已用于背光，旧版的 Do 指示灯接线不适用。若屏幕只引出裸背光 LED，请通过模块所需的限流或驱动电路接入。
+
+### 音频和烧录
+
+| 信号 | STM32 引脚 | 接法 |
+| --- | --- | --- |
+| 电子琴音频 | PA0（TIM2_CH1） | 串联 1 kΩ，电阻后的节点接 10 nF 到 GND，再经 4.7 µF 耦合到 HXJ8002 音频输入 |
+| 节拍器 | PB1（TIM3_CH4） | 接低电平有效无源蜂鸣器模块的 SIG / IN，信号脚须兼容 3.3 V |
+| ST-Link SWDIO | PA13 | SWDIO 接 SWDIO |
+| ST-Link SWCLK | PA14 | SWCLK / SWCK 接 SWCLK |
+| ST-Link GND | GND | 与主控共地 |
+
+HXJ8002 用 5 V 供电并和主控共地。基线扬声器为 8 Ω / 2 W，两端分别接功放的 OUT+ 和 OUT−，两端均不接 GND。PB8、PB9 目前空闲。
+
+烧录前确认供电方式。如果由 ST-Link 的 3.3 V 输出给目标板供电，先断开 DC。若调试器标的是 VTref，请按其说明接目标板的参考电压。切回 DC 供电前，先断开 ST-Link。
+
+固件引脚定义可对照 [main.h](Core/Inc/main.h)、[SPI1 配置](Core/Src/stm32f1xx_hal_msp.c)和[背光驱动](BSP/Src/bsp_tft.c)。
+
 ## 构建与测试
 
 在 Windows PowerShell 中使用 Arm GNU Toolchain，将 `arm-none-eabi-gcc` 加入 PATH，或将 `ARM_TOOLCHAIN_PATH` 指向工具链的 `bin` 目录。
